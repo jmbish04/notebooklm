@@ -47,7 +47,7 @@ export function Chat() {
   return (
     <div className="h-full">
       <AssistantRuntimeProvider runtime={runtime}>
-        <div><div /></div>
+        <Thread />
       </AssistantRuntimeProvider>
     </div>
   );
