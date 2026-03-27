@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 
 export function Chat() {
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   const runtime = useExternalStoreRuntime({
     messages,
