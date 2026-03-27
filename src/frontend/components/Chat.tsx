@@ -1,25 +1,30 @@
-import {
-  AssistantRuntimeProvider,
-  useExternalStoreRuntime,
-} from "@assistant-ui/react";
-
+import { AssistantRuntimeProvider, useExternalStoreRuntime } from "@assistant-ui/react";
 import React, { useState } from "react";
 
-
 export function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
 
   const runtime = useExternalStoreRuntime({
     messages,
     isRunning: false,
     onNew: async (msg) => {
-      setMessages((prev) => [...prev, { ...msg, id: Date.now().toString(), role: 'user', content: [{ type: 'text', text: msg.content[0]?.text || '' }] }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          ...msg,
+          id: Date.now().toString(),
+          role: "user",
+          content: [{ type: "text", text: msg.content[0]?.text || "" }],
+        },
+      ]);
 
       try {
-        const response = await fetch('/chat', {
-          method: 'POST',
-          body: JSON.stringify({ messages: [...messages, { role: 'user', content: msg.content[0]?.text }] }),
-          headers: { 'Content-Type': 'application/json' }
+        const response = await fetch("/chat", {
+          method: "POST",
+          body: JSON.stringify({
+            messages: [...messages, { role: "user", content: msg.content[0]?.text }],
+          }),
+          headers: { "Content-Type": "application/json" },
         });
 
         // Handling response stream simply for mock
@@ -36,7 +41,14 @@ export function Chat() {
               assistantMessage += decoder.decode(value);
             }
           }
-          setMessages((prev) => [...prev, { id: Date.now().toString(), role: 'assistant', content: [{ type: 'text', text: assistantMessage }] }]);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now().toString(),
+              role: "assistant",
+              content: [{ type: "text", text: assistantMessage }],
+            },
+          ]);
         }
       } catch (e) {
         console.error(e);
@@ -47,7 +59,9 @@ export function Chat() {
   return (
     <div className="h-full">
       <AssistantRuntimeProvider runtime={runtime}>
-        <Thread />
+        <div>
+          <div />
+        </div>
       </AssistantRuntimeProvider>
     </div>
   );

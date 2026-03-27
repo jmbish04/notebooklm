@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
 import { UploadCloud } from "lucide-react";
+import React, { useState, useCallback } from "react";
 
 export function Uploader() {
   const [files, setFiles] = useState<File[]>([]);
@@ -24,11 +24,11 @@ export function Uploader() {
 
     for (const file of files) {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append("file", file);
 
       try {
-        await fetch('/api/batch/upload', {
-          method: 'POST',
+        await fetch("/api/batch/upload", {
+          method: "POST",
           body: formData,
         });
         uploadedCount++;
@@ -63,7 +63,10 @@ export function Uploader() {
             }
           }}
         />
-        <label htmlFor="file-upload" className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
+        <label
+          htmlFor="file-upload"
+          className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
+        >
           Select Files
         </label>
       </div>
@@ -85,12 +88,15 @@ export function Uploader() {
             disabled={uploading}
             className="w-full px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
           >
-            {uploading ? 'Uploading...' : 'Upload All'}
+            {uploading ? "Uploading..." : "Upload All"}
           </button>
 
           {uploading && (
             <div className="mt-4 w-full bg-gray-700 rounded h-4 overflow-hidden">
-              <div className="bg-blue-500 h-full transition-all duration-300" style={{ width: progress + "%" }}></div>
+              <div
+                className="bg-blue-500 h-full transition-all duration-300"
+                style={{ width: progress + "%" }}
+              ></div>
             </div>
           )}
         </div>
