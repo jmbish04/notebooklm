@@ -221,7 +221,7 @@ export function parseSource(src: Raw[]): Source {
     id: String(srcId),
     title,
     url,
-    kind: _sourceTypeFromCode(typeCode),
+    kind: sourceTypeFromCode(typeCode),
     createdAt,
     status: _sourceStatusFromCode(statusCode),
     _typeCode: typeCode,
