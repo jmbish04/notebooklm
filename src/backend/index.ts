@@ -54,7 +54,7 @@ export default class NotebookLMService extends WorkerEntrypoint {
     return { success: true };
   }
 
-  async uploadDocument(_notebookId: string, _file: any) {
+  async uploadDocument(_notebookId: string, _file: unknown) {
     // implementation
     return { success: true };
   }
