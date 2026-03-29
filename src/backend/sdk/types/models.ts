@@ -330,9 +330,10 @@ export function parseNote(data: Raw[]): Note {
   }
   if (Array.isArray(data[4]) && typeof data[4][0] === "number") {
     try {
-      updatedAt = new Date((data[4][0] as number) * 1000);
-    } catch {
+    } catch (e) {
       // ignore
+      console.error(`Failed to parse note updatedAt timestamp: ${e}`);
+    }
     }
   }
 
