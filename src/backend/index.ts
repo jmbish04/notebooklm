@@ -49,12 +49,12 @@ export default class NotebookLMService extends WorkerEntrypoint {
   }
 
   // RPC methods
-  async createNotebook(_params: unknown) {
+  async createNotebook(_params: any) {
     // implementation
     return { success: true };
   }
 
-  async uploadDocument(_notebookId: string, _file: unknown) {
+  async uploadDocument(_notebookId: string, _file: any) {
     // implementation
     return { success: true };
   }
@@ -68,14 +68,12 @@ export default class NotebookLMService extends WorkerEntrypoint {
 import { honiAgent } from "./agents/honi";
 
 export class HoniWorkspaceAgent {
-  state: DurableObjectState;
-  env: Env;
-  constructor(state: DurableObjectState, env: Env) {
+  constructor(state, env) {
     this.state = state;
     this.env = env;
   }
 
-  async fetch(request: Request) {
+  async fetch(request) {
     return honiAgent(request, this.env);
   }
 }

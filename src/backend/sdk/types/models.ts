@@ -221,7 +221,7 @@ export function parseSource(src: Raw[]): Source {
     id: String(srcId),
     title,
     url,
-    kind: sourceTypeFromCode(typeCode),
+    kind: _sourceTypeFromCode(typeCode),
     createdAt,
     status: _sourceStatusFromCode(statusCode),
     _typeCode: typeCode,
@@ -330,10 +330,9 @@ export function parseNote(data: Raw[]): Note {
   }
   if (Array.isArray(data[4]) && typeof data[4][0] === "number") {
     try {
-    } catch (e) {
+      updatedAt = new Date((data[4][0] as number) * 1000);
+    } catch {
       // ignore
-      console.error(`Failed to parse note updatedAt timestamp: ${e}`);
-    }
     }
   }
 

@@ -22,7 +22,7 @@ Always confirm before uploading large batches to NotebookLM.`,
       }),
       execute: async ({ query, type }) => {
         // Mock implementation for now
-        return { success: true, results: [`Found ${type} matching '${query}'`] };
+        return { success: true, results: ["Found " + type + " matching '" + query + "'"] };
       },
     }),
     batch_upload_notebooklm: tool({
@@ -44,7 +44,7 @@ Always confirm before uploading large batches to NotebookLM.`,
       }),
       execute: async ({ original_text, revised_text }) => {
         // Return diff format
-        return `\`\`\`diff\n- ${original_text}\n+ ${revised_text}\n\`\`\``;
+        return "```diff\n- " + original_text + "\n+ " + revised_text + "\n```";
       },
     }),
   },

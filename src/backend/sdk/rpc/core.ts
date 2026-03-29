@@ -141,9 +141,8 @@ export class RPCCore {
           sourceIds.push(first[0] as string);
         }
       }
-    } catch (e) {
+    } catch {
       // ignore parse errors
-      console.error(`Failed to parse source IDs: ${e}`);
     }
     return sourceIds;
   }

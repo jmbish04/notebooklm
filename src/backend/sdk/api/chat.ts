@@ -114,8 +114,9 @@ export class ChatAPI {
           try {
             a = String(((next[4] as unknown[][])[0] as unknown[])[0] ?? "");
           } catch (e) {
+            console.error("RPC call failed:", JSON.stringify(e));
+            console.error("Error extracting next:", JSON.stringify(e));
             /* ignore */
-            console.error("Failed to parse answer from conversation turn:", e);
           }
           i++;
         }
@@ -180,8 +181,9 @@ export class ChatAPI {
           try {
             answer = String(((next[4] as unknown[][])[0] as unknown[])[0] ?? "");
           } catch (e) {
+            console.error("RPC call failed:", JSON.stringify(e));
+            console.error("Error extracting next:", JSON.stringify(e));
             /* ignore */
-            console.error("Failed to parse answer from history turn:", e);
           }
           i++;
         }
@@ -270,6 +272,7 @@ export class ChatAPI {
         body,
       });
     } catch (e) {
+      console.error("RPC call failed:", JSON.stringify(e));
       throw new ChatError(`Chat request failed: ${String(e)}`);
     }
 
@@ -307,7 +310,8 @@ function parseStreamingResponse(rawText: string): ParsedResponse {
     let data: unknown;
     try {
       data = JSON.parse(jsonStr);
-    } catch {
+    } catch (e) {
+      console.error("Failed parsing message:", JSON.stringify(e));
       return;
     }
     if (!Array.isArray(data)) return;
@@ -320,7 +324,8 @@ function parseStreamingResponse(rawText: string): ParsedResponse {
       let innerData: unknown;
       try {
         innerData = JSON.parse(innerJson);
-      } catch {
+      } catch (e) {
+        console.error("Failed parsing message:", JSON.stringify(e));
         continue;
       }
       if (!Array.isArray(innerData) || !innerData.length) continue;

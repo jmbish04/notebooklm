@@ -2,7 +2,7 @@ import { AssistantRuntimeProvider, useExternalStoreRuntime } from "@assistant-ui
 import React, { useState } from "react";
 
 export function Chat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
 
   const runtime = useExternalStoreRuntime({
     messages,
@@ -51,7 +51,7 @@ export function Chat() {
           ]);
         }
       } catch (e) {
-        console.error(e);
+        console.error("Chat error:", JSON.stringify(e));
       }
     },
   });
