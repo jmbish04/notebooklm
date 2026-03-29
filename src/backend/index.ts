@@ -49,7 +49,7 @@ export default class NotebookLMService extends WorkerEntrypoint {
   }
 
   // RPC methods
-  async createNotebook(_params: any) {
+  async createNotebook(_params: unknown) {
     // implementation
     return { success: true };
   }
