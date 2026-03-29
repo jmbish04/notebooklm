@@ -179,8 +179,9 @@ export class ChatAPI {
         if (Array.isArray(next) && next.length > 4 && next[2] === 2) {
           try {
             answer = String(((next[4] as unknown[][])[0] as unknown[])[0] ?? "");
-          } catch {
+          } catch (e) {
             /* ignore */
+            console.error("Failed to parse answer from history turn:", e);
           }
           i++;
         }
