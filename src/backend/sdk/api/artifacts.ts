@@ -503,8 +503,9 @@ export class ArtifactsAPI {
     try {
       const parsed = JSON.parse(mindMapJson) as Record<string, unknown>;
       if (typeof parsed["name"] === "string") title = parsed["name"];
-    } catch {
+    } catch (e) {
       // keep default title
+      console.error(`Failed to parse mind map JSON to extract title: ${e}`);
     }
 
     return this.notes.create(notebookId, mindMapJson, title);
