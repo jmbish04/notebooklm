@@ -68,12 +68,14 @@ export default class NotebookLMService extends WorkerEntrypoint {
 import { honiAgent } from "./agents/honi";
 
 export class HoniWorkspaceAgent {
-  constructor(state, env) {
+  state: DurableObjectState;
+  env: Env;
+  constructor(state: DurableObjectState, env: Env) {
     this.state = state;
     this.env = env;
   }
 
-  async fetch(request) {
+  async fetch(request: Request) {
     return honiAgent(request, this.env);
   }
 }
