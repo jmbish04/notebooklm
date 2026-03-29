@@ -51,7 +51,7 @@ export function Chat() {
           ]);
         }
       } catch (e) {
-        console.error("Chat error:", JSON.stringify(e));
+        console.error("Chat error:", e);
       }
     },
   });
