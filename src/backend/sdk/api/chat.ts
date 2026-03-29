@@ -113,8 +113,9 @@ export class ChatAPI {
         if (Array.isArray(next) && next.length > 4 && next[2] === 2) {
           try {
             a = String(((next[4] as unknown[][])[0] as unknown[])[0] ?? "");
-          } catch {
+          } catch (e) {
             /* ignore */
+            console.error("Failed to parse answer from conversation turn:", e);
           }
           i++;
         }
