@@ -59,7 +59,7 @@ export class ChatAPI {
     const fReq = JSON.stringify([null, paramsJson]);
 
     this.reqid += 100_000;
-    const bl = (typeof process !== "undefined" && process.env["NOTEBOOKLM_BL"]) || DEFAULT_BL;
+    const bl = DEFAULT_BL;
 
     const urlParams = new URLSearchParams({ bl, hl: "en", _reqid: String(this.reqid), rt: "c" });
     if (this.auth.sessionId) urlParams.set("f.sid", this.auth.sessionId);

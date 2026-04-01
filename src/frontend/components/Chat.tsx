@@ -1,6 +1,12 @@
 import { AssistantRuntimeProvider, useExternalStoreRuntime } from "@assistant-ui/react";
 import React, { useState } from "react";
 
+interface Message {
+  id: string;
+  role: "user" | "assistant";
+  content: Array<{ type: "text"; text: string }>;
+}
+
 export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -22,7 +28,7 @@ export function Chat() {
         const response = await fetch("/chat", {
           method: "POST",
           body: JSON.stringify({
-            messages: [...messages, { role: "user", content: msg.content[0]?.text }],
+            messages: [{ role: "user", content: msg.content[0]?.text }],
           }),
           headers: { "Content-Type": "application/json" },
         });
@@ -51,7 +57,7 @@ export function Chat() {
           ]);
         }
       } catch (e) {
-        console.error("Chat error:", e);
+        console.error("Chat error:", JSON.stringify(e));
       }
     },
   });

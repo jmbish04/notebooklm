@@ -34,7 +34,7 @@ export function Uploader() {
         uploadedCount++;
         setProgress((uploadedCount / files.length) * 100);
       } catch (e) {
-        console.error("Upload failed for file:", file.name, "Error:", e);
+        console.error("Upload failed for file:", file.name, "Error:", JSON.stringify(e));
       }
     }
 

@@ -22,7 +22,7 @@ Always confirm before uploading large batches to NotebookLM.`,
       }),
       execute: async ({ query, type }) => {
         // Mock implementation for now
-        return { success: true, results: ["Found " + type + " matching '" + query + "'"] };
+        return { success: true, results: [`Found ${type} matching '${query}'`] };
       },
     }),
     batch_upload_notebooklm: tool({
