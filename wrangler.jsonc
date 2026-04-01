@@ -1,6 +1,6 @@
 {
   "name": "core-template-cfw-assets-astro-shadcn",
-  "main": "dist/_worker.js/index.js",
+  "main": "src/backend/index.ts",
   "compatibility_date": "2026-03-09",
   "compatibility_flags": ["nodejs_compat"],
   "upload_source_maps": true,
@@ -30,6 +30,10 @@
   "ai": {
     "binding": "AI",
   },
+  "durable_objects": {
+    "bindings": [{ "name": "HoniAgent", "class_name": "HoniWorkspaceAgent" }],
+  },
+
   "d1_databases": [
     {
       "binding": "DB",
@@ -39,6 +43,8 @@
       "migrations_dir": "drizzle",
     },
   ],
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["HoniWorkspaceAgent"] }],
+
   "secrets_store_secrets": [
     {
       "binding": "GITHUB_TOKEN",

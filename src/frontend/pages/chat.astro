@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Chat } from "../components/Chat.tsx";
+---
+
+<BaseLayout title="Honi Chat">
+  <div class="h-screen w-full flex flex-col">
+    <div class="flex-1 overflow-hidden relative">
+      <Chat client:load />
+    </div>
+  </div>
+</BaseLayout>

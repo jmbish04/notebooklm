@@ -1,0 +1,10 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { Uploader } from "../components/Uploader.tsx";
+---
+
+<BaseLayout title="Batch Upload">
+  <div class="h-screen w-full flex flex-col items-center justify-center bg-gray-950 p-4">
+    <Uploader client:load />
+  </div>
+</BaseLayout>
