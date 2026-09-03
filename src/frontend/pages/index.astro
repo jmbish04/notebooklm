@@ -1,12 +1,142 @@
 ---
-import { ComponentExample } from "@/components/ComponentExample";
+/**
+ * Task dashboard. Reachable only with a valid session cookie — the middleware
+ * redirects to /login otherwise.
+ */
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { siteConfig } from "@/lib/config";
+import { getDb } from "../../backend/db/client";
+import { listTasks } from "../../backend/tasks/service";
+
+const env = (Astro.locals as any).runtime.env;
+const tasks = await listTasks(getDb(env), { limit: 25 });
+
+const mcpUrl = new URL("/mcp", Astro.url).toString();
+
+const badge: Record<string, string> = {
+  queued: "bg-muted text-muted-foreground",
+  running: "bg-blue-500/15 text-blue-400",
+  succeeded: "bg-green-500/15 text-green-400",
+  failed: "bg-red-500/15 text-red-400",
+  cancelled: "bg-amber-500/15 text-amber-400",
+};
+
+const formatTime = (epoch: number | null) =>
+  epoch ? new Date(epoch * 1000).toLocaleString() : "—";
 ---
 
-<BaseLayout
-  title={siteConfig.name}
-  description={siteConfig.description}
->
-  <ComponentExample client:load />
+<BaseLayout title="NotebookLM tasks" description="Queued NotebookLM queries and their results.">
+  <main class="mx-auto w-full max-w-5xl space-y-8 px-4 py-8">
+    <header class="space-y-1">
+      <h1 class="text-2xl font-semibold">NotebookLM tasks</h1>
+      <p class="text-sm text-muted-foreground">
+        Queries run for several minutes. Ask a question, then check back here.
+      </p>
+    </header>
+
+    <section class="rounded-xl border bg-card p-6">
+      <h2 class="mb-4 text-sm font-medium">Ask a question</h2>
+      <form id="ask" class="grid gap-3 sm:grid-cols-[minmax(0,14rem)_1fr_auto]">
+        <input
+          name="notebook_id"
+          required
+          placeholder="Notebook ID"
+          class="h-10 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <input
+          name="question"
+          required
+          placeholder="What do you want to ask?"
+          class="h-10 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+        <button
+          type="submit"
+          class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Queue
+        </button>
+      </form>
+      <p id="ask-status" class="mt-3 hidden text-sm text-muted-foreground"></p>
+    </section>
+
+    <section class="rounded-xl border bg-card">
+      <div class="border-b px-6 py-4">
+        <h2 class="text-sm font-medium">Recent tasks</h2>
+      </div>
+
+      {tasks.length === 0 ? (
+        <p class="px-6 py-10 text-center text-sm text-muted-foreground">
+          No tasks yet.
+        </p>
+      ) : (
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="border-b text-left text-xs uppercase text-muted-foreground">
+              <tr>
+                <th class="px-6 py-3 font-medium">Status</th>
+                <th class="px-6 py-3 font-medium">Question</th>
+                <th class="px-6 py-3 font-medium">Notebook</th>
+                <th class="px-6 py-3 font-medium">Created</th>
+                <th class="px-6 py-3 font-medium">Task ID</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map((task) => (
+                <tr class="border-b last:border-0">
+                  <td class="px-6 py-3">
+                    <span class={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${badge[task.status] ?? ""}`}>
+                      {task.status}
+                    </span>
+                  </td>
+                  <td class="max-w-sm truncate px-6 py-3">{task.question}</td>
+                  <td class="px-6 py-3 text-muted-foreground">{task.notebookId}</td>
+                  <td class="px-6 py-3 text-muted-foreground">{formatTime(task.createdAt)}</td>
+                  <td class="px-6 py-3 font-mono text-xs text-muted-foreground">{task.id}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+
+    <section class="rounded-xl border bg-card p-6">
+      <h2 class="mb-2 text-sm font-medium">Connect over MCP</h2>
+      <p class="mb-3 text-sm text-muted-foreground">
+        Point an MCP client at this URL. It supports an API key or an OAuth
+        sign-in, and an OAuth authorization stays valid for one year.
+      </p>
+      <code class="block rounded-md border bg-background px-3 py-2 font-mono text-xs">{mcpUrl}</code>
+    </section>
+  </main>
 </BaseLayout>
+
+<script is:inline>
+  const form = document.getElementById("ask");
+  const status = document.getElementById("ask-status");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+
+    status.classList.remove("hidden");
+    status.textContent = "Queueing…";
+
+    const response = await fetch("/api/tasks", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        notebook_id: data.get("notebook_id"),
+        question: data.get("question"),
+      }),
+    });
+
+    const body = await response.json();
+
+    if (response.ok) {
+      status.textContent = `Queued as ${body.task_id}. Reloading…`;
+      setTimeout(() => window.location.reload(), 900);
+    } else {
+      status.textContent = body.error ?? "Could not queue the task.";
+    }
+  });
+</script>
