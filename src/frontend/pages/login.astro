@@ -1,0 +1,77 @@
+---
+/**
+ * Passcode gate. Deliberately does not name the credential it checks against —
+ * it asks for "the access passcode" and nothing more.
+ */
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const next = Astro.url.searchParams.get("next") ?? "/";
+// Only allow same-site redirects, so ?next= cannot bounce a visitor off-site.
+const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/";
+---
+
+<BaseLayout title="Sign in" description="Enter the access passcode to continue.">
+  <main class="mx-auto flex min-h-[70vh] w-full max-w-sm items-center px-4">
+    <form id="login" class="w-full space-y-4 rounded-xl border bg-card p-6">
+      <div class="space-y-1">
+        <h1 class="text-lg font-semibold">Sign in</h1>
+        <p class="text-sm text-muted-foreground">
+          Enter the access passcode to continue.
+        </p>
+      </div>
+
+      <div class="space-y-2">
+        <label for="passcode" class="text-sm font-medium">Access passcode</label>
+        <input
+          id="passcode"
+          name="passcode"
+          type="password"
+          required
+          autofocus
+          autocomplete="current-password"
+          placeholder="Enter passcode"
+          class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        />
+      </div>
+
+      <p id="error" class="hidden text-sm text-destructive"></p>
+
+      <button
+        type="submit"
+        class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90"
+      >
+        Continue
+      </button>
+
+      <p class="text-xs text-muted-foreground">
+        You will stay signed in on this browser for 60 days.
+      </p>
+    </form>
+  </main>
+</BaseLayout>
+
+<script is:inline define:vars={{ safeNext }}>
+  const form = document.getElementById("login");
+  const error = document.getElementById("error");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    error.classList.add("hidden");
+
+    const response = await fetch("/api/session", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        passcode: form.querySelector("#passcode").value,
+      }),
+    });
+
+    if (response.ok) {
+      window.location.href = safeNext;
+      return;
+    }
+
+    error.textContent = "That passcode is not correct.";
+    error.classList.remove("hidden");
+  });
+</script>
