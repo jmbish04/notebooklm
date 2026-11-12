@@ -19,6 +19,13 @@ export default defineConfig({
       enabled: true,
     },
   }),
+  // Astro's built-in origin check rejects any non-GET request whose
+  // content-type is form-like or absent — including a correctly authenticated
+  // API client using `Authorization: Bearer`. CSRF is a cookie problem, so the
+  // check is enforced in middleware for cookie-authenticated requests only.
+  security: {
+    checkOrigin: false,
+  },
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],

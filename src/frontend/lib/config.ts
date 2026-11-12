@@ -17,19 +17,15 @@ export type SiteConfig = {
 };
 
 export const siteConfig: SiteConfig = {
-  name: "Astro shadcn/ui template",
-  description: "The template helps you build apps with Astro, Tailwind CSS, and shadcn/ui.",
-  url: "https://astro-shadcn-ui-template.vercel.app",
+  name: "NotebookLM",
+  description: "Queue long-running NotebookLM queries and check in on them by UUID.",
+  url: "https://notebooklm.hacolby.workers.dev",
   author: {
-    name: "AREA44",
-    url: "https://github.com/area44",
+    name: "jmbish04",
+    url: "https://github.com/jmbish04",
   },
   links: {
-    github: "https://github.com/area44/astro-shadcn-ui-template",
+    github: "https://github.com/jmbish04/notebooklm",
   },
-  navItems: [
-    { href: "https://astro.build", label: "Astro", external: true },
-    { href: "https://tailwindcss.com", label: "Tailwind CSS", external: true },
-    { href: "https://ui.shadcn.com", label: "shadcn/ui", external: true },
-  ],
+  navItems: [{ href: "/", label: "Tasks" }],
 };
